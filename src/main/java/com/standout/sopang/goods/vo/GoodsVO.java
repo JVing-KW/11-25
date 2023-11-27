@@ -1,6 +1,7 @@
 package com.standout.sopang.goods.vo;
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 @Setter
 @Getter
 @ToString
+@Component("goodsVO")
 public class GoodsVO {
 	private int goods_id;
 	private String goods_sort;

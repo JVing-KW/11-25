@@ -3,6 +3,7 @@ package com.standout.sopang.goods.service;
 import com.standout.sopang.goods.config.GoodsConvert;
 import com.standout.sopang.goods.dao.GoodsDAO;
 import com.standout.sopang.goods.dto.GoodsDTO;
+import com.standout.sopang.goods.dto.ImageFileDTO;
 import com.standout.sopang.goods.vo.GoodsVO;
 import com.standout.sopang.goods.vo.ImageFileVO;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class GoodsServiceImpl implements GoodsService {
 	@Autowired
 	GoodsConvert goods;
 	List<GoodsDTO> dtoList;
-
+	List<ImageFileDTO> imageListDto;
 
 //	메인페이지 - 지정 status별, 메뉴별
 
@@ -107,11 +108,15 @@ public class GoodsServiceImpl implements GoodsService {
 		GoodsVO goodsVO = goodsDAO.selectGoodsDetail(_goods_id);
 	  GoodsDTO	goodsDTO =modelMapper.map(goodsVO,GoodsDTO.class);
 		goodsMap.put("goodsDTO", goodsDTO);
-		
+
+
+		//imageFileDTO 따로?
 		//상품 상세이미지 추출
 		List<ImageFileVO> imageList = goodsDAO.selectGoodsDetailImage(_goods_id);
-		goodsMap.put("imageList", imageList);
-		
+
+		imageListDto =goods.convertImageDTO(imageList);
+		goodsMap.put("imageList", imageListDto);
+
 		//위 정보를 담은 Map return
 		return goodsMap;
 	}

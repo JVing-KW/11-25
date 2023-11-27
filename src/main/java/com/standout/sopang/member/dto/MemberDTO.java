@@ -4,11 +4,8 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 
-@ToString
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
 @Component("memberDTO")
 public class MemberDTO {
 

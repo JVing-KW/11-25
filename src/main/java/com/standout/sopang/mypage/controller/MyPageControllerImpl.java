@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.standout.sopang.member.dto.MemberDTO;
+import com.standout.sopang.order.dto.OrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,7 +35,7 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 	private MyPageService myPageService;
 	
 	@Autowired
-	private MemberVO memberVO;
+	private MemberDTO memberDTO;
 	
 	//주문목록
 	@Override
@@ -43,9 +45,9 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 		HttpSession session=request.getSession();
 
 		//memberInfo의 member_id get
-		memberVO=(MemberVO)session.getAttribute("memberInfo");
-			if(memberVO != null) {
-			String  member_id=memberVO.getMember_id();
+		memberDTO=(MemberDTO)session.getAttribute("memberInfo");
+			if(memberDTO != null) {
+			String  member_id=memberDTO.getMember_id();
 
 			//조회기간 fixedSearchPeriod get
 			String fixedSearchPeriod = dateMap.get("fixedSearchPeriod");
@@ -58,7 +60,7 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 			dateMap.put("beginDate", beginDate);
 			dateMap.put("endDate", endDate);
 			dateMap.put("member_id", member_id);
-			List<OrderVO> myOrderHistList=myPageService.listMyOrderHistory(dateMap);
+			List<OrderDTO> myOrderHistList=myPageService.listMyOrderHistory(dateMap);
 			//검색일자를 년,월,일로 분리해서 화면에 전달
 			String beginDate1[]=beginDate.split("-");
 			String endDate1[]=endDate.split("-");
@@ -149,8 +151,8 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 		Map<String,String> memberMap=new HashMap<String,String>();
 		
 		HttpSession session=request.getSession();
-		memberVO=(MemberVO)session.getAttribute("memberInfo");
-		String  member_id=memberVO.getMember_id();
+		memberDTO=(MemberDTO)session.getAttribute("memberInfo");
+		String  member_id=memberDTO.getMember_id();
 		
 		//받아온 정보 memberMap에 put
 		memberMap.put("member_pw",member_pw);
@@ -161,11 +163,11 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 		memberMap.put("member_id", member_id);
 		
 		//memberMap을 가지고 db수정
-		memberVO=(MemberVO)myPageService.modifyMyInfo(memberMap);
+		memberDTO=(MemberDTO)myPageService.modifyMyInfo(memberMap);
 		
 		//수정된 회원 정보를 다시 세션에 저장한다.
 		session.removeAttribute("memberInfo");
-		session.setAttribute("memberInfo", memberVO);
+		session.setAttribute("memberInfo", memberDTO);
 		
 		String message = null;
 		ResponseEntity resEntity = null;

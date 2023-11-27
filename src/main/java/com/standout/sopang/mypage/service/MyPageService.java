@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.standout.sopang.member.dto.MemberDTO;
 import com.standout.sopang.member.vo.MemberVO;
+import com.standout.sopang.order.dto.OrderDTO;
 import com.standout.sopang.order.vo.OrderVO;
 
 public interface MyPageService{
 
 	//주문목록
-	public List<OrderVO> listMyOrderHistory(Map dateMap) throws Exception;
+	public List<OrderDTO> listMyOrderHistory(Map dateMap) throws Exception;
 
 	//주문취소
 	public void cancelOrder(String order_id) throws Exception;
@@ -22,10 +24,10 @@ public interface MyPageService{
 	public void exchangeOrder(String order_id) throws Exception;
 
 	//내정보
-	public MemberVO myDetailInfo(String member_id) throws Exception;
+	public MemberDTO myDetailInfo(String member_id) throws Exception;
 	
 	//내 정보 수정
-	public MemberVO  modifyMyInfo(Map memberMap) throws Exception;
+	public MemberDTO modifyMyInfo(Map memberMap) throws Exception;
 	
 	//회원탈퇴
 	public void  deleteMember(String member_id) throws Exception;
