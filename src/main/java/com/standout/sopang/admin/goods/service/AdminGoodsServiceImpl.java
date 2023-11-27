@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.standout.sopang.config.ConvertList;
+import com.standout.sopang.goods.dto.GoodsDTO;
+import com.standout.sopang.goods.dto.ImageFileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,13 +21,18 @@ import com.standout.sopang.goods.vo.ImageFileVO;
 public class AdminGoodsServiceImpl implements AdminGoodsService {
 	@Autowired
 	private AdminGoodsDAO adminGoodsDAO;
+	@Autowired
+	ConvertList convertList;
 
 	
 	
 	//상품관리 - 상품리스트
 	@Override
-	public List<GoodsVO> listNewGoods(Map condMap) throws Exception {
-		return adminGoodsDAO.selectNewGoodsList(condMap);
+	public List<GoodsDTO> listNewGoods(Map condMap) throws Exception {
+//		convertList.GoodsConvertDTO(adminGoodsDAO.selectNewGoodsList(condMap));
+//		return adminGoodsDAO.selectNewGoodsList(condMap);
+		List<GoodsDTO> goodsDTOList	=	convertList.GoodsConvertDTO(adminGoodsDAO.selectNewGoodsList(condMap));
+		return goodsDTOList;
 	}
 
 	
@@ -72,16 +80,16 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
 		adminGoodsDAO.modifyGoods(goods_id, newGoodsMap);
 		
 		//정수화한 상품id goods_id_toInt를 img에 대입한다.
-		ArrayList<ImageFileVO> imageFileList = (ArrayList) newGoodsMap.get("imageFileList");
-		for (ImageFileVO imageFileVO : imageFileList) {
-			imageFileVO.setGoods_id(goods_id_toInt);
+		ArrayList<ImageFileDTO> imageFileList = (ArrayList) newGoodsMap.get("imageFileList");
+		for (ImageFileDTO imageFileDTO : imageFileList) {
+			imageFileDTO.setGoods_id(goods_id_toInt);
 		}
 		
 		//이미지 수정
 		//이미지가 없을경우의 submit에 null예외를 예방하고, 메소드를 분리하지않기위해 if문을 사용.
 		// 파일은 수정하지않을 경우엔 modifyImages를 사용하지않는다.
-		for (ImageFileVO imageFileVO : imageFileList) {
-			if (imageFileVO.getFileName() == "" || imageFileVO.getFileName() == null) {} 
+		for (ImageFileDTO imageFileDTO : imageFileList) {
+			if (imageFileDTO.getFileName() == "" || imageFileDTO.getFileName() == null) {}
 			else {adminGoodsDAO.modifyImages(imageFileList);}
 		}
 

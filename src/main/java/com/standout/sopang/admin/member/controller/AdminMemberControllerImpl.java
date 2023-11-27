@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.standout.sopang.member.dto.MemberDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class AdminMemberControllerImpl extends BaseController  implements AdminM
 		HashMap<String,Object> condMap=new HashMap<String,Object>();
 		condMap.put("beginDate",beginDate);
 		condMap.put("endDate", endDate);
-		ArrayList<MemberVO> member_list=adminMemberService.listMember(condMap);
+		ArrayList<MemberDTO> member_list=adminMemberService.listMember(condMap);
 
 		//리턴된 회원리스트 member_list를  mav의 member_list에 부여
 

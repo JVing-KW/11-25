@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.standout.sopang.goods.dto.GoodsDTO;
+import com.standout.sopang.goods.dto.ImageFileDTO;
+import com.standout.sopang.member.dto.MemberDTO;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,9 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.standout.sopang.admin.goods.service.AdminGoodsService;
 import com.standout.sopang.common.base.BaseController;
-import com.standout.sopang.goods.vo.GoodsVO;
-import com.standout.sopang.goods.vo.ImageFileVO;
-import com.standout.sopang.member.vo.MemberVO;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller("adminGoodsController")
@@ -62,7 +62,7 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 		Map<String, Object> condMap = new HashMap<String, Object>();
 		condMap.put("beginDate", beginDate);
 		condMap.put("endDate", endDate);
-		List<GoodsVO> newGoodsList = adminGoodsService.listNewGoods(condMap);
+		List<GoodsDTO> newGoodsList = adminGoodsService.listNewGoods(condMap);
 		
 		//리턴된 상품리스트 newGoodsList를  mav의 newGoodsList에 부여
 		model.addAttribute("newGoodsList", newGoodsList);
@@ -102,16 +102,16 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 
 		//세션에서 get한 memberInfo가 reg_id, 수정한이가 됨.
 		HttpSession session = multipartRequest.getSession();
-		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
-		String reg_id = memberVO.getMember_id();
+		MemberDTO memberDTO = (MemberDTO) session.getAttribute("memberInfo");
+		String reg_id = memberDTO.getMember_id();
 
 		//baseController upload
-		List<ImageFileVO> imageFileList = upload(multipartRequest);
+		List<ImageFileDTO> imageFileList = upload(multipartRequest);
 		
 		//imageFileList를 받아 setReg_id해 newGoodsMap에 put
 		if (imageFileList != null && imageFileList.size() != 0) {
-			for (ImageFileVO imageFileVO : imageFileList) {
-				imageFileVO.setReg_id(reg_id);
+			for (ImageFileDTO imageFileDTO : imageFileList) {
+				imageFileDTO.setReg_id(reg_id);
 			}
 			newGoodsMap.put("imageFileList", imageFileList);
 		}
@@ -127,10 +127,10 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 			
 			//imageFileList가 있을 경우 
 			if (imageFileList != null && imageFileList.size() != 0) {
-				for (ImageFileVO imageFileVO : imageFileList) {
+				for (ImageFileDTO imageFileDTO : imageFileList) {
 					
 					//temp안에 imageFileName 이름으로 파일 생성,
-					imageFileName = imageFileVO.getFileName();
+					imageFileName = imageFileDTO.getFileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH + "\\" + "temp" + "\\" + imageFileName);
 					
 					//이후 goods_id가 폴더명인 폴더를 하나 만들어 
@@ -150,8 +150,8 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 			//예외발생의 경우 
 			//이미 파일이 생성되어 있는 이후 에러가 발생시 대비한다.
 			if (imageFileList != null && imageFileList.size() != 0) {
-				for (ImageFileVO imageFileVO : imageFileList) {
-					imageFileName = imageFileVO.getFileName();
+				for (ImageFileDTO imageFileDTO : imageFileList) {
+					imageFileName = imageFileDTO.getFileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH + "\\" + "temp" + "\\" + imageFileName);
 					//만들어진 temp경로안의 파일들을 삭제한다.
 					srcFile.delete();
@@ -260,15 +260,15 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 		}
 
 		HttpSession session = multipartRequest.getSession();
-		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
+		MemberDTO memberDTO = (MemberDTO) session.getAttribute("memberInfo");
 
 		
 		//수령받은 imageFileList의 정보에서 getFileName이 비어잇진 않는지 확인하고, 카운트한다.
 		int check = 0;
-		List<ImageFileVO> imageFileList = upload(multipartRequest);
+		List<ImageFileDTO> imageFileList = upload(multipartRequest);
 		if (imageFileList != null && imageFileList.size() != 0) {
-			for (ImageFileVO imageFileVO : imageFileList) {
-				if (imageFileVO.getFileName() == "" || imageFileVO.getFileName() == null) {
+			for (ImageFileDTO imageFileDTO : imageFileList) {
+				if (imageFileDTO.getFileName() == "" || imageFileDTO.getFileName() == null) {
 					check += 1;
 				}
 			}
@@ -282,13 +282,13 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 		try {
 			//modifyGoods 상품정보 ㅅ정
 			adminGoodsService.modifyGoods(goods_id, newGoodsMap);
-			for (ImageFileVO imageFileVO : imageFileList) {
+			for (ImageFileDTO imageFileDTO : imageFileList) {
 				
 				//수령받은 정보에서 getFileName을 찾을 수 없다면 폴더/이미지를 생성/업로드하지않는다.
-				if (imageFileVO.getFileName() == "" || imageFileVO.getFileName() == null) {
+				if (imageFileDTO.getFileName() == "" || imageFileDTO.getFileName() == null) {
 				} else {
 					//리스트와 파일정보를 잘 받았다면
-					imageFileName = imageFileVO.getFileName();
+					imageFileName = imageFileDTO.getFileName();
 					//temp 임시폴더 안에 파일생성 imageFileName
 					File srcFile = new File(CURR_IMAGE_REPO_PATH + "\\" + "temp" + "\\" + imageFileName);
 					//이름이 goods_id인 폴더로 덮어쓰기 copyFileToDirectory
@@ -308,8 +308,8 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 			//수정중 예외가 낫을때
 			
 			if (imageFileList != null && imageFileList.size() != 0) {
-				for (ImageFileVO imageFileVO : imageFileList) {
-					imageFileName = imageFileVO.getFileName();
+				for (ImageFileDTO imageFileDTO : imageFileList) {
+					imageFileName = imageFileDTO.getFileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH + "\\" + "temp" + "\\" + imageFileName);
 					//temp임시 폴더에 생성된 파일들을 삭제한다.
 					srcFile.delete();

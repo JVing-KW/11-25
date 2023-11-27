@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.standout.sopang.goods.dto.ImageFileDTO;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -78,17 +79,17 @@ public abstract class BaseController  {
 	}
 	
 	//상품추가/수정시 사용될 파일 upload메소드, fileList return
-	protected List<ImageFileVO> upload(MultipartHttpServletRequest multipartRequest) throws Exception{
-		List<ImageFileVO> fileList= new ArrayList<ImageFileVO>();
+	protected List<ImageFileDTO> upload(MultipartHttpServletRequest multipartRequest) throws Exception{
+		List<ImageFileDTO> fileList= new ArrayList<ImageFileDTO>();
 		Iterator<String> fileNames = multipartRequest.getFileNames();
 		while(fileNames.hasNext()){
-			ImageFileVO imageFileVO =new ImageFileVO();
+			ImageFileDTO imageFileDTO =new ImageFileDTO();
 			String fileName = fileNames.next();
-			imageFileVO.setFileType(fileName);
+			imageFileDTO.setFileType(fileName);
 			MultipartFile mFile = multipartRequest.getFile(fileName);
 			String originalFileName=mFile.getOriginalFilename();
-			imageFileVO.setFileName(originalFileName);
-			fileList.add(imageFileVO);
+			imageFileDTO.setFileName(originalFileName);
+			fileList.add(imageFileDTO);
 			
 			File file = new File(CURR_IMAGE_REPO_PATH +"\\"+ fileName);
 			if(mFile.getSize()!=0){ //File Null Check
