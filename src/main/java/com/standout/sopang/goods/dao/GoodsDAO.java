@@ -2,6 +2,7 @@ package com.standout.sopang.goods.dao;
 
 import java.util.List;
 
+import com.standout.sopang.goods.dto.GoodsDTO;
 import org.springframework.dao.DataAccessException;
 
 import com.standout.sopang.goods.vo.GoodsVO;

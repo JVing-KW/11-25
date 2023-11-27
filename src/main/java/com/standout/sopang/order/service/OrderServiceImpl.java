@@ -18,6 +18,7 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private OrderDAO orderDAO;
 
+
 	//주문하기
 	public void addNewOrder(List<OrderVO> myOrderList) throws Exception{
 		//주문하기

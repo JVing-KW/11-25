@@ -3,6 +3,7 @@ package com.standout.sopang.goods.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.standout.sopang.goods.dto.GoodsDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -26,7 +27,7 @@ public class GoodsDAOImpl  implements GoodsDAO{
 	@Override
 	public List<GoodsVO> selectMenusList(String goodsSort) throws DataAccessException {
 		List<GoodsVO> goodsList=(ArrayList)sqlSession.selectList("mapper.goods.selectMenusList",goodsSort);
-		return goodsList;	
+		return goodsList;
 	}
 
 	

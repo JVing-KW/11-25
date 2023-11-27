@@ -1,6 +1,7 @@
 package com.standout.sopang.main;
 
 import com.standout.sopang.common.base.BaseController;
+import com.standout.sopang.goods.dto.GoodsDTO;
 import com.standout.sopang.goods.service.GoodsService;
 import com.standout.sopang.goods.vo.GoodsVO;
 import lombok.extern.log4j.Log4j2;
@@ -37,7 +38,7 @@ public class MainController extends BaseController {
 //		mav.setViewName(viewName);
 		session = request.getSession();
 		session.setAttribute("side_menu", "user");
-		Map<String, List<GoodsVO>> goodsMap = goodsService.listGoods();
+		Map<String, List<GoodsDTO>> goodsMap = goodsService.listGoods();
 //		mav.addObject("goodsMap", goodsMap);
 		model.addAttribute("goodsMap", goodsMap);
 		System.out.println(goodsMap);

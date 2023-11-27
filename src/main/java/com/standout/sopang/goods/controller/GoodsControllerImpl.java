@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.standout.sopang.goods.dto.GoodsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +38,7 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 	public String menuGoods(String menuGoods, Model model,
 							HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		List<GoodsVO> goodsList=goodsService.menuGoods(menuGoods);
+		List<GoodsDTO> goodsList=goodsService.menuGoods(menuGoods);
 		//추출한 데이터와 카테고리명을 매핑하여 return.
 		model.addAttribute("goodsList", goodsList);
 		model.addAttribute("menuGoods", menuGoods);
@@ -75,7 +76,7 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 	@Override
 	@RequestMapping(value="/searchGoods" ,method = RequestMethod.GET)
 	public String searchGoods(String searchWord,Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		List<GoodsVO> goodsList=goodsService.searchGoods(searchWord);
+		List<GoodsDTO> goodsList=goodsService.searchGoods(searchWord);
 		model.addAttribute("goodsList",goodsList);
 		return "/goods/searchGoods";
 	}
@@ -92,10 +93,10 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		model.addAttribute("goodsMap", goodsMap);
 
 //		//goodsMap을 goodsVO 객체에 대입
-		GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
+		GoodsDTO goodsDTO=(GoodsDTO)goodsMap.get("goodsDTO");
 //
 //		//퀵메뉴에 방문한 해당 상품정보를 추가
-		addGoodsInQuick(goods_id,goodsVO,session);
+		addGoodsInQuick(goods_id,goodsDTO,session);
 //
 //		//뷰 + 상품상세 정보 리턴
 	return "/goods/goodsDetail";
@@ -127,13 +128,13 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 	
 	
 	//퀵메뉴
-	private void addGoodsInQuick(String goods_id,GoodsVO goodsVO,HttpSession session){
+	private void addGoodsInQuick(String goods_id,GoodsDTO goodsDTO,HttpSession session){
 		//중복체크를 위한 변수 초기화
 		boolean already_existed=false;
 		
 		//기존 퀵메뉴 리스트 quickGoodsList 할당
-		List<GoodsVO> quickGoodsList;
-		quickGoodsList=(ArrayList<GoodsVO>)session.getAttribute("quickGoodsList");
+		List<GoodsDTO> quickGoodsList;
+		quickGoodsList=(ArrayList<GoodsDTO>)session.getAttribute("quickGoodsList");
 		
 		//퀵메뉴에 리스트가 있을때
 		if(quickGoodsList!=null){
@@ -150,21 +151,21 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 				}
 				//already_existed이 false, 중복되지않는 새로운 상품일 경우 add
 				if(already_existed==false){
-					quickGoodsList.add(goodsVO);
+					quickGoodsList.add(goodsDTO);
 				}
 
 			//퀵메뉴 리스트가 3개를 넘어가게 될경우
 			}else {
 				//첫번재 상품을 없애고 새로운 상품을 추가.
 				quickGoodsList.remove(0);
-				quickGoodsList.add(goodsVO);
+				quickGoodsList.add(goodsDTO);
 			}
 		
 		
 		//퀵메뉴에 리스트가 없을 경우 새 ArrayList생성 및 추가 add
 		}else{
-			quickGoodsList =new ArrayList<GoodsVO>();
-			quickGoodsList.add(goodsVO);
+			quickGoodsList =new ArrayList<GoodsDTO>();
+			quickGoodsList.add(goodsDTO);
 		}
 		
 		//위 작업을 완료 한 뒤 세션에 저장.
